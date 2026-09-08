@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Halaman Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0531f2 0%, #cc12dd 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .login-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            overflow: hidden;
+        }
+        
+        .login-header {
+            background: linear-gradient(135deg, #667eea 0%, #0742e5 100%);
+            padding: 30px 20px;
+            text-align: center;
+            color: white;
+        }
+        
+        .login-header h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .login-header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .login-form {
+            padding: 20px 30px 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border 0.3s;
+        }
+        
+        .form-group input:focus {
+            border-color: #667eea;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+        }
+        
+        .error-message {
+            color: #e74c3c;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .login-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .login-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .login-button:active {
+            transform: translateY(0);
+        }
+        
+        .login-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .login-footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        .login-footer a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 480px) {
+            .login-container {
+                width: 90%;
+            }
+            
+            .login-form {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <h1>Selamat Datang</h1>
+            <p>Silakan masuk ke akun Anda</p>
+        </div>
+        
+        <form class="login-form" id="loginForm">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" placeholder="Masukkan email Anda">
+                <div class="error-message" id="emailError">Email tidak valid</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Kata Sandi</label>
+                <input type="password" id="password" placeholder="Masukkan kata sandi Anda">
+                <div class="error-message" id="passwordError">Kata sandi harus minimal 6 karakter</div>
+            </div>
+            
+            <button type="submit" class="login-button">Masuk</button>
+            
+            <div class="login-footer">
+                <p>Lupa kata sandi? <a href="#">Klik di sini</a></p>
+                <p>Belum punya akun? <a href="#">Daftar sekarang</a></p>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('loginForm');
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+            const emailError = document.getElementById('emailError');
+            const passwordError = document.getElementById('passwordError');
+            
+            // Fungsi validasi email
+            function validateEmail(email) {
+                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return re.test(email);
+            }
+            
+            // Fungsi validasi password
+            function validatePassword(password) {
+                return password.length >= 6;
+            }
+            
+            // Event listener untuk input email
+            emailInput.addEventListener('blur', function() {
+                if (!validateEmail(emailInput.value)) {
+                    emailError.style.display = 'block';
+                    emailInput.style.borderColor = '#e74c3c';
+                } else {
+                    emailError.style.display = 'none';
+                    emailInput.style.borderColor = '#ddd';
+                }
+            });
+            
+            // Event listener untuk input password
+            passwordInput.addEventListener('blur', function() {
+                if (!validatePassword(passwordInput.value)) {
+                    passwordError.style.display = 'block';
+                    passwordInput.style.borderColor = '#e74c3c';
+                } else {
+                    passwordError.style.display = 'none';
+                    passwordInput.style.borderColor = '#ddd';
+                }
+            });
+            
+            // Event listener untuk form submission
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                let isValid = true;
+                
+                // Validasi email
+                if (!validateEmail(emailInput.value)) {
+                    emailError.style.display = 'block';
+                    emailInput.style.borderColor = '#e74c3c';
+                    isValid = false;
+                } else {
+                    emailError.style.display = 'none';
+                    emailInput.style.borderColor = '#ddd';
+                }
+                
+                // Validasi password
+                if (!validatePassword(passwordInput.value)) {
+                    passwordError.style.display = 'block';
+                    passwordInput.style.borderColor = '#e74c3c';
+                    isValid = false;
+                } else {
+                    passwordError.style.display = 'none';
+                    passwordInput.style.borderColor = '#ddd';
+                }
+                
+                // Jika valid, proses login
+                if (isValid) {
+                    // Simulasi proses login
+                    alert('Login berhasil! Selamat datang.');
+                    // Di aplikasi nyata, di sini akan ada pengiriman data ke server
+                    // loginForm.submit();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

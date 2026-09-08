@@ -1,0 +1,2200 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kamus Bahasa Banjar - Indonesia</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .translator-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .translator-container {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+        }
+
+        .translator-box {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 2px solid #e9ecef;
+        }
+
+        .translator-box h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        .language-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .lang-btn {
+            padding: 10px 20px;
+            border: 2px solid #3498db;
+            background: white;
+            color: #3498db;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .lang-btn.active {
+            background: #3498db;
+            color: white;
+        }
+
+        .lang-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        textarea {
+            width: 100%;
+            height: 150px;
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 16px;
+            resize: vertical;
+            transition: border-color 0.3s ease;
+            font-family: inherit;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .translate-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 20px 0;
+            transition: all 0.3s ease;
+        }
+
+        .translate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(52, 152, 219, 0.3);
+        }
+
+        .translate-btn:active {
+            transform: translateY(0);
+        }
+
+        .result-box {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 15px;
+            min-height: 150px;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .unknown-word {
+            color: #e74c3c;
+            background: #fdf2f2;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+
+        .stats {
+            text-align: center;
+            margin-top: 20px;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+
+        .feature-section {
+            padding: 40px;
+            background: #f8f9fa;
+            border-top: 2px solid #e9ecef;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .feature-card h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .feature-card p {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+
+        .footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            color: #3498db;
+            font-weight: 600;
+        }
+
+        .swap-btn {
+            background: #9b59b6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            margin: 10px 0;
+            transition: all 0.3s ease;
+        }
+
+        .swap-btn:hover {
+            background: #8e44ad;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Kamus Bahasa Banjar - Indonesia</h1>
+            <p>Terjemahkan kata dan kalimat antara Bahasa Indonesia dan Bahasa Banjar</p>
+        </div>
+
+        <div class="translator-container">
+            <!-- Indonesia ke Banjar -->
+            <div class="translator-box">
+                <h2>Indonesia → Banjar</h2>
+                <div class="language-selector">
+                    <button class="lang-btn active" onclick="setDirection('id-to-banjar')">Indonesia → Banjar</button>
+                </div>
+                <textarea id="input-id" placeholder="Masukkan teks dalam Bahasa Indonesia..."></textarea>
+                <button class="translate-btn" onclick="translateIdToBanjar()">Terjemahkan ke Banjar</button>
+                <div class="result-box" id="result-banjar">
+                    Hasil terjemahan akan muncul di sini...
+                </div>
+                <div class="stats" id="stats-id"></div>
+            </div>
+
+            <!-- Banjar ke Indonesia -->
+            <div class="translator-box">
+                <h2>Banjar → Indonesia</h2>
+                <div class="language-selector">
+                    <button class="lang-btn active" onclick="setDirection('banjar-to-id')">Banjar → Indonesia</button>
+                </div>
+                <textarea id="input-banjar" placeholder="Masukkan teks dalam Bahasa Banjar..."></textarea>
+                <button class="translate-btn" onclick="translateBanjarToId()">Terjemahkan ke Indonesia</button>
+                <div class="result-box" id="result-id">
+                    Hasil terjemahan akan muncul di sini...
+                </div>
+                <div class="stats" id="stats-banjar"></div>
+            </div>
+        </div>
+
+        <div style="text-align: center;">
+            <button class="swap-btn" onclick="swapLanguages()">⇄ Tukar Bahasa</button>
+        </div>
+
+        <div class="loading" id="loading">Memproses terjemahan...</div>
+
+        <div class="feature-section">
+            <h2 style="text-align: center; color: #2c3e50; margin-bottom: 30px;">Fitur Kamus</h2>
+            <div class="features">
+                <div class="feature-card">
+                    <h3>📚 Kamus Lengkap</h3>
+                    <p>Lebih dari 1.000 kata dalam database kamus Indonesia-Banjar</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🔄 Dua Arah</h3>
+                    <p>Terjemahkan dari Indonesia ke Banjar dan sebaliknya</p>
+                </div>
+                <div class="feature-card">
+                    <h3>⚡ Real-time</h3>
+                    <p>Proses terjemahan cepat dan akurat</p>
+                </div>
+                <div class="feature-card">
+                    <h3>📱 Responsif</h3>
+                    <p>Dapat digunakan di desktop, tablet, dan smartphone</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2025 Kamus Bahasa Banjar - Indonesia. Semua hak dilindungi.</p>
+            <p style="margin-top: 10px; font-size: 14px; opacity: 0.8;">
+                Dibuat untuk melestarikan dan mempromosikan Bahasa Banjar
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Data kamus Indonesia-Banjar (dikonversi dari C++ ke JavaScript)
+        const idToBanjar = {
+            "indonesia": "banjar",
+            "aamiin": "aamiin",
+            "acar": "acar",
+            "acung": "acung",
+            "ada": "ada",
+            "adalah": "adalah",
+            "adat": "adat",
+            "adat istiadat": "adat istiadat",
+            "adik": "ading",
+            "adil": "adil",
+            "adon": "adon",
+            "adonan": "adonan",
+            "adu": "adu",
+            "aduh": "aduh",
+            "agama": "agama",
+            "agar-agar": "agar-agar",
+            "akar": "akar",
+            "akar lurus besar": "akar manah",
+            "akhirat": "ahirat",
+            "akhlak": "ahlak",
+            "aku": "ulun",
+            "alang-alang": "alalang",
+            "aman": "aman",
+            "amanat": "amanat",
+            "ambil": "ambil",
+            "amplas": "ampalas",
+            "amplop": "amplok",
+            "ampun": "ampun",
+            "anak": "anak",
+            "anak ayam": "anak piak",
+            "anak dari istri": "anak buah",
+            "anak haram": "anak kampung",
+            "anak kandung": "anak diujut",
+            "anak tiri": "anak tiri",
+            "ancam": "ancam",
+            "anggap": "anggap",
+            "anggrek": "anggrik",
+            "angin": "angin",
+            "angin deras": "angin daras",
+            "angka": "angka",
+            "angkasa": "angkasa",
+            "angkat": "angkat",
+            "angsa": "angsa",
+            "anjing": "adupan",
+            "antar": "anjur",
+            "antara": "antara",
+            "anting-anting": "anting-anting",
+            "apa": "apa",
+            "api": "api",
+            "apung": "apung",
+            "arab": "arap",
+            "arah": "ampah",
+            "arak": "arak",
+            "arang": "arang",
+            "arti": "arti",
+            "arus": "arus",
+            "arwah": "arwah",
+            "asah": "asah",
+            "asal": "asal",
+            "asam": "asam",
+            "asap": "ambul",
+            "asar": "asar",
+            "asli": "asli",
+            "astagfirullah": "astagfirullah",
+            "asuh": "asuh",
+            "asyik": "asik",
+            "atap": "atap",
+            "atas": "atas",
+            "atau": "atawa",
+            "atur": "atur",
+            "awal": "awal",
+            "awam": "awam",
+            "awan": "awan",
+            "awas": "awas",
+            "awet": "awit",
+            "ayam": "ampul",
+            "ayam jantan": "ayam laki",
+            "ayat": "ayat",
+            "ayo": "ayu",
+            "ayun": "ayun",
+            "azab": "ajap",
+            "baca": "babaca",
+            "badan": "awak",
+            "bagaikan": "bagaikan",
+            "bagaimana mungkin": "alah-alah",
+            "bagi": "babagi",
+            "bahagia": "bahagia",
+            "bahan": "bahan",
+            "bahas": "bahas",
+            "bahaya": "bahaya",
+            "bahkan": "bahkan",
+            "bahu": "bahu",
+            "bahwa": "bahwa",
+            "baik": "abdol",
+            "baju": "baju",
+            "bakal": "bakal",
+            "bakar": "bakar",
+            "bakat": "bakat",
+            "bakso": "bakso",
+            "bakteri": "bakteri",
+            "baku": "baku",
+            "bakul": "bakul",
+            "bala": "bala",
+            "balai": "balai",
+            "balap": "balap",
+            "balas": "balas",
+            "balik": "balik",
+            "balok": "balok",
+            "balon": "balon",
+            "bambu": "bambu",
+            "bangau": "bangau",
+            "bangga": "bangga",
+            "bangkai": "bangkai",
+            "bangkit": "bangkit",
+            "bangkrut": "bangkrut",
+            "bangku": "bangku",
+            "bangsa": "bangsa",
+            "bangsal": "bangsal",
+            "banjir": "banjir",
+            "bantal": "bantal",
+            "banteng": "banteng",
+            "bantu": "bantu",
+            "banyak": "banyak",
+            "bapak": "abah",
+            "barang": "barang",
+            "barat": "barat",
+            "baring": "baring",
+            "baris": "baris",
+            "baru": "anyar",
+            "basah": "basah",
+            "basi": "basi",
+            "bata": "bata",
+            "batuk": "batuk",
+            "bau": "bau",
+            "bawa": "bawa",
+            "bawang": "bawang",
+            "bayam": "bayam",
+            "bayang": "bayang",
+            "bayar": "bayar",
+            "bayi": "bayi",
+            "beban": "beban",
+            "bebas": "bebas",
+            "bebek": "itik",
+            "becak": "becak",
+            "beda": "bada",
+            "begini": "bagini",
+            "begitu": "bagitu",
+            "bekas": "bakas",
+            "belajar": "baraja",
+            "beli": "bali",
+            "belum": "balum",
+            "benar": "banar",
+            "bencana": "ancana",
+            "benda": "benda",
+            "bendera": "bendera",
+            "bengkak": "bengkak",
+            "bening": "baning",
+            "benua": "banua",
+            "berat": "berat",
+            "beri": "bari",
+            "berita": "barita",
+            "besar": "besar",
+            "besi": "besi",
+            "besok": "besok",
+            "betul": "betul",
+            "biar": "biar",
+            "biasa": "biasa",
+            "biaya": "biaya",
+            "bibir": "bibir",
+            "bicara": "bacarita",
+            "biji": "biji",
+            "bila": "bila",
+            "bilik": "bilik",
+            "bimbing": "bimbing",
+            "binatang": "binatang",
+            "bintang": "bintang",
+            "biru": "biru",
+            "bis": "bis",
+            "bisa": "bisa",
+            "bisik": "bisik",
+            "bising": "bising",
+            "bisu": "bisu",
+            "bohong": "bohong",
+            "bola": "bola",
+            "boleh": "boleh",
+            "bom": "bom",
+            "bongkar": "bongkar",
+            "buku": "buku",
+            "bulan": "bulan",
+            "bulat": "bulat",
+            "bulu": "bulu",
+            "bumi": "bumi",
+            "bunga": "bunga",
+            "bungkus": "bungkus",
+            "bunuh": "bunuh",
+            "bunyi": "bunyi",
+            "buruk": "buruk",
+            "burung": "burung",
+            "bus": "bis",
+            "busuk": "busuk",
+            "buta": "buta",
+            "butuh": "butuh",
+            "cabai": "cabai",
+            "cabang": "cabang",
+            "cahaya": "cahaya",
+            "cair": "cair",
+            "cakap": "cakap",
+            "calon": "calon",
+            "campur": "campur",
+            "canda": "canda",
+            "cantik": "cantik",
+            "capai": "capai",
+            "cara": "cara",
+            "cari": "cari",
+            "cat": "cat",
+            "catat": "catat",
+            "cebok": "cabuk",
+            "cegah": "cagah",
+            "cekat": "cakat",
+            "celaka": "calaka",
+            "celana": "calana",
+            "cepat": "capat",
+            "cerah": "carah",
+            "cerai": "carai",
+            "cerdas": "cardas",
+            "cerewet": "carewat",
+            "cerita": "carita",
+            "cermat": "carmat",
+            "cermin": "carmin",
+            "coba": "cuba",
+            "cocok": "cucuk",
+            "cuaca": "cuaca",
+            "cucu": "cucu",
+            "cuka": "cuka",
+            "cukup": "cukup",
+            "cukur": "cukur",
+            "cium": "cium",
+            "dada": "dada",
+            "dadar": "dadar",
+            "dadu": "dadu",
+            "daerah": "daerah",
+            "daftar": "daftar",
+            "dagang": "dagang",
+            "daging": "daging",
+            "dahaga": "dahaga",
+            "dahan": "dahan",
+            "dahi": "dahi",
+            "dahsyat": "dahsyat",
+            "dahulu": "dahulu",
+            "daki": "daki",
+            "dalam": "dalam",
+            "dalang": "dalang",
+            "damai": "damai",
+            "damar": "damar",
+            "dampak": "dampak",
+            "dan": "dan",
+            "dana": "dana",
+            "danau": "danau",
+            "dansa": "dansa",
+            "dapat": "dapat",
+            "dapur": "dapur",
+            "dara": "dara",
+            "darah": "darah",
+            "darat": "darat",
+            "dari": "dari",
+            "darurat": "darurat",
+            "dasar": "dasar",
+            "dasi": "dasi",
+            "data": "data",
+            "datang": "datang",
+            "datar": "datar",
+            "datuk": "datuk",
+            "daun": "daun",
+            "daya": "daya",
+            "debat": "debat",
+            "debu": "debu",
+            "dekat": "dekat",
+            "delima": "dalima",
+            "demi": "dami",
+            "demo": "damo",
+            "dengar": "dangar",
+            "dengki": "dangki",
+            "dengkur": "dangkur",
+            "depan": "depan",
+            "derita": "darita",
+            "desa": "desa",
+            "desak": "dasak",
+            "detik": "datik",
+            "dewa": "dewa",
+            "dewan": "dewan",
+            "dewasa": "dewasa",
+            "dewi": "dewi",
+            "dia": "dia",
+            "diabetes": "diabetes",
+            "diadu": "diadu",
+            "diagram": "diagram",
+            "diam": "diam",
+            "diare": "diare",
+            "dibaca": "dibaca",
+            "dibagi": "dibagi",
+            "dibakar": "dibakar",
+            "dibangun": "dibangun",
+            "dibantu": "dibantu",
+            "dibawa": "dibawa",
+            "diberi": "dibari",
+            "dibuat": "dibuat",
+            "dibunuh": "dibunuh",
+            "dicari": "dicari",
+            "dicatat": "dicatat",
+            "dicuci": "dicuci",
+            "didalam": "didalam",
+            "didengar": "didangar",
+            "didorong": "didurung",
+            "didukung": "didukung",
+            "diekspor": "diekspor",
+            "diganti": "diganti",
+            "digunakan": "digunaakan",
+            "dihapus": "dihapus",
+            "diingat": "diingat",
+            "diisi": "diisi",
+            "dijual": "dijual",
+            "dikasi": "dikasi",
+            "dikatakan": "dikatakan",
+            "dikirim": "dikirim",
+            "dilarang": "dilarang",
+            "dilempar": "dilempar",
+            "dilihat": "dilihat",
+            "dimana": "dimana",
+            "dimensi": "dimensi",
+            "diminta": "diminta",
+            "dipanggil": "dipanggil",
+            "dipanaskan": "dipanaskan",
+            "diperbaiki": "diperbaiki",
+            "dipotong": "dipotong",
+            "diri": "diri",
+            "dirinya": "dirinya",
+            "disana": "disana",
+            "disini": "disini",
+            "disimpan": "disimpan",
+            "ditambah": "ditambah",
+            "ditanya": "ditanya",
+            "ditinggal": "ditinggal",
+            "diubah": "diubah",
+            "doa": "doa",
+            "dodol": "dodol",
+            "dokter": "dokter",
+            "domba": "domba",
+            "dompet": "dompet",
+            "dongeng": "dongeng",
+            "dorong": "durung",
+            "dosa": "dosa",
+            "dua": "dua",
+            "duda": "duda",
+            "duduk": "duduk",
+            "duit": "duit",
+            "duka": "duka",
+            "dukun": "dukun",
+            "dukung": "dukung",
+            "dulu": "dulu",
+            "dunia": "dunia",
+            "durhaka": "durhaka",
+            "duri": "duri",
+            "durian": "durian",
+            "dusta": "dusta",
+            "ebi": "ebi",
+            "ecer": "acar",
+            "edan": "edan",
+            "efek": "afek",
+            "egois": "agois",
+            "ekor": "ekor",
+            "elang": "elang",
+            "emas": "amas",
+            "embun": "ambun",
+            "empat": "ampat",
+            "enak": "enak",
+            "enam": "anam",
+            "entah": "antah",
+            "es": "as",
+            "fajar": "fajar",
+            "fakir": "fakir",
+            "fantasi": "fantasi",
+            "farmasi": "farmasi",
+            "fasih": "fasih",
+            "film": "film",
+            "firasat": "firasat",
+            "fisik": "fisik",
+            "fitnah": "fitnah",
+            "folio": "folio",
+            "foto": "foto",
+            "gabung": "gabung",
+            "gadai": "gadai",
+            "gading": "gading",
+            "gadis": "gadis",
+            "gagah": "gagah",
+            "gagal": "gagal",
+            "gagap": "gagap",
+            "gaji": "gaji",
+            "gajah": "gajah",
+            "gali": "gali",
+            "galon": "galon",
+            "gampang": "gampang",
+            "ganas": "ganas",
+            "ganda": "ganda",
+            "ganggu": "ganggu",
+            "ganja": "ganja",
+            "ganjil": "ganjil",
+            "ganteng": "ganteng",
+            "ganti": "ganti",
+            "gapura": "gapura",
+            "garam": "garam",
+            "garis": "garis",
+            "garpu": "garpu",
+            "gas": "gas",
+            "gatal": "gatal",
+            "gaya": "gaya",
+            "gedung": "gedung",
+            "gelap": "galap",
+            "gelas": "galas",
+            "geli": "gali",
+            "gelombang": "galumbang",
+            "gembira": "gambira",
+            "gembok": "gambuk",
+            "gempa": "gampa",
+            "gemuk": "gamuk",
+            "genap": "ganap",
+            "genggam": "ganggam",
+            "genteng": "ganting",
+            "gerak": "garak",
+            "gerhana": "garhana",
+            "gergaji": "gargaji",
+            "gerilya": "garilya",
+            "gertak": "gartak",
+            "getah": "gatah",
+            "getar": "gatar",
+            "gigi": "gigi",
+            "gigih": "gigih",
+            "gigit": "gigit",
+            "gila": "gila",
+            "giling": "giling",
+            "gimana": "gimana",
+            "gincu": "gincu",
+            "ginjal": "ginjal",
+            "gips": "gips",
+            "giring": "giring",
+            "gitar": "gitar",
+            "goa": "gua",
+            "gol": "gol",
+            "golok": "guluk",
+            "gong": "gong",
+            "gorden": "gorden",
+            "goreng": "guring",
+            "gosip": "gusip",
+            "gosok": "gusuk",
+            "gotong": "gutung",
+            "goyang": "guyang",
+            "gula": "gula",
+            "guling": "guling",
+            "gundah": "gundah",
+            "gunting": "gunting",
+            "guntur": "guntur",
+            "gunung": "gunung",
+            "guru": "guru",
+            "gusur": "gusur",
+            "habis": "habis",
+            "hadang": "hadang",
+            "hadap": "hadap",
+            "hadiah": "hadiah",
+            "hadir": "hadir",
+            "hafal": "hapal",
+            "hai": "hai",
+            "haji": "haji",
+            "hak": "hak",
+            "hakim": "hakim",
+            "hal": "hal",
+            "halal": "halal",
+            "halaman": "halaman",
+            "halau": "halau",
+            "halus": "halus",
+            "hama": "hama",
+            "hamba": "hamba",
+            "hambar": "hambar",
+            "hambat": "hambat",
+            "hambur": "hambur",
+            "hamil": "hamil",
+            "hampa": "hampa",
+            "hampir": "hampir",
+            "hana": "hana",
+            "hancur": "hancur",
+            "handal": "handal",
+            "handuk": "handuk",
+            "hangat": "hangat",
+            "hangus": "hangus",
+            "hantam": "hantam",
+            "hantu": "hantu",
+            "hanya": "hanya",
+            "hapus": "hapus",
+            "hara": "hara",
+            "haram": "haram",
+            "harga": "harga",
+            "hari": "hari",
+            "harimau": "harimau",
+            "harta": "harta",
+            "harum": "harum",
+            "harus": "harus",
+            "hasil": "hasil",
+            "hati": "hati",
+            "haus": "haus",
+            "hebat": "habat",
+            "hela": "hela",
+            "hemat": "hamat",
+            "hendak": "handak",
+            "henti": "hanti",
+            "heran": "haran",
+            "hewan": "hawan",
+            "hia": "hia",
+            "hias": "hias",
+            "hibur": "hibur",
+            "hidang": "hidang",
+            "hidup": "hidup",
+            "hijau": "hijau",
+            "hikmat": "hikmat",
+            "hilang": "hilang",
+            "hina": "hina",
+            "hindar": "hindar",
+            "hingga": "hingga",
+            "hitam": "hitam",
+            "hitung": "hitung",
+            "hobi": "hobi",
+            "hormat": "hurmat",
+            "hotel": "hotel",
+            "hubung": "hubung",
+            "hujan": "hujan",
+            "hukum": "hukum",
+            "hulu": "hulu",
+            "hutan": "hutan",
+            "ia": "ia",
+            "ibadah": "ibadah",
+            "iblis": "iblis",
+            "ibu": "ibu",
+            "ijin": "ijin",
+            "ikan": "ikan",
+            "ikat": "ikat",
+            "ikhlas": "ikhlas",
+            "iklan": "iklan",
+            "ikut": "ikut",
+            "ilmu": "ilmu",
+            "iman": "iman",
+            "imbang": "imbang",
+            "impian": "impian",
+            "impor": "impor",
+            "inap": "inap",
+            "indah": "indah",
+            "induk": "induk",
+            "ingat": "ingat",
+            "ingin": "handak",
+            "ingkar": "ingkar",
+            "ini": "ini",
+            "injak": "injak",
+            "insaf": "insaf",
+            "intan": "intan",
+            "ipar": "ipar",
+            "iptek": "iptek",
+            "iqra": "iqra",
+            "iri": "iri",
+            "irit": "irit",
+            "isap": "isap",
+            "isi": "isi",
+            "islam": "islam",
+            "istana": "istana",
+            "istimewa": "istimewa",
+            "istri": "bini",
+            "isyarat": "isyarat",
+            "itik": "itik",
+            "itu": "itu",
+            "izin": "izin",
+            "jabal": "jabal",
+            "jadi": "jadi",
+            "jadwal": "jadwal",
+            "jaga": "jaga",
+            "jago": "jago",
+            "jahat": "jahat",
+            "jahit": "jahit",
+            "jail": "jail",
+            "jaja": "jaja",
+            "jajah": "jajah",
+            "jajar": "jajar",
+            "jaket": "jaket",
+            "jala": "jala",
+            "jalan": "jalan",
+            "jalur": "jalur",
+            "jam": "jam",
+            "jaman": "jaman",
+            "jamban": "jamban",
+            "jambu": "jambu",
+            "jamin": "jamin",
+            "jamu": "jamu",
+            "jamur": "jamur",
+            "janda": "janda",
+            "jangan": "jangan",
+            "jangka": "jangka",
+            "janji": "janji",
+            "jantan": "jantan",
+            "jantung": "jantung",
+            "januari": "januari",
+            "jarak": "jarak",
+            "jarang": "jarang",
+            "jari": "jari",
+            "jarum": "jarum",
+            "jasa": "jasa",
+            "jatah": "jatah",
+            "jati": "jati",
+            "jatuh": "jatuh",
+            "jauh": "jauh",
+            "jawab": "jawab",
+            "jawa": "jawa",
+            "jaya": "jaya",
+            "jeda": "jada",
+            "jejak": "jejak",
+            "jejal": "jejal",
+            "jelas": "jelas",
+            "jelek": "jelek",
+            "jelma": "jelma",
+            "jemaah": "jemaah",
+            "jembatan": "jambatan",
+            "jempol": "jampul",
+            "jemput": "jamput",
+            "jemur": "jamur",
+            "jenaka": "janaka",
+            "jenazah": "janazah",
+            "jendela": "jandila",
+            "jenggot": "janggot",
+            "jengkel": "jangkal",
+            "jenis": "janis",
+            "jenjang": "janjang",
+            "jentik": "jantik",
+            "jepit": "japit",
+            "jera": "jara",
+            "jerami": "jarami",
+            "jerat": "jarat",
+            "jerawat": "jarawat",
+            "jernih": "jarnih",
+            "jeruk": "jaruk",
+            "jilat": "jilat",
+            "jilbab": "jilbab",
+            "jin": "jin",
+            "jinak": "jinak",
+            "jingkat": "jingkat",
+            "jinjing": "jinjing",
+            "jiwa": "jiwa",
+            "jodoh": "juduh",
+            "joget": "jugit",
+            "jongkok": "jungkuk",
+            "jorok": "juruk",
+            "jual": "jual",
+            "juang": "juang",
+            "jubah": "jubah",
+            "jubel": "jubal",
+            "judul": "judul",
+            "jujur": "jujur",
+            "julang": "julang",
+            "juling": "juling",
+            "jumat": "jumat",
+            "jumlah": "jumlah",
+            "jumpa": "jumpa",
+            "jungkir": "jungkir",
+            "junjung": "junjung",
+            "juri": "juri",
+            "jurang": "jurang",
+            "jurus": "jurus",
+            "kabar": "kabar",
+            "kabel": "kabel",
+            "kabin": "kabin",
+            "kabur": "kabur",
+            "kaca": "kaca",
+            "kacang": "kacang",
+            "kacau": "kacau",
+            "kadal": "kadal",
+            "kadar": "kadar",
+            "kadas": "kadas",
+            "kado": "kado",
+            "kafan": "kafan",
+            "kaget": "kagit",
+            "kagum": "kagum",
+            "kail": "kail",
+            "kain": "kain",
+            "kait": "kait",
+            "kakak": "kakak",
+            "kakek": "kakek",
+            "kaki": "kaki",
+            "kaku": "kaku",
+            "kalah": "kalah",
+            "kalajengking": "kalajingking",
+            "kalau": "kalau",
+            "kali": "kali",
+            "kalung": "kalung",
+            "kamar": "kamar",
+            "kambing": "kambing",
+            "kamera": "kamera",
+            "kami": "kami",
+            "kampung": "kampung",
+            "kamu": "ikam",
+            "kanan": "kanan",
+            "kancing": "kancing",
+            "kandang": "kandang",
+            "kandas": "kandas",
+            "kangen": "kangan",
+            "kantong": "kantong",
+            "kantor": "kantor",
+            "kapak": "kapak",
+            "kapal": "kapal",
+            "kapur": "kapur",
+            "karam": "karam",
+            "karang": "karang",
+            "karet": "karet",
+            "karpet": "karpet",
+            "kartu": "kartu",
+            "karung": "karung",
+            "kasih": "kasih",
+            "kasur": "kasur",
+            "kata": "kata",
+            "kategori": "kategori",
+            "kaya": "kaya",
+            "kayu": "kayu",
+            "kebun": "kabun",
+            "kecap": "kacap",
+            "kecewa": "kacawa",
+            "kecil": "kacil",
+            "kedai": "kadai",
+            "kedua": "kadua",
+            "kejar": "kajar",
+            "keju": "kaju",
+            "kekasih": "kakasih",
+            "kelapa": "kalapa",
+            "kelas": "kalas",
+            "kelebihan": "kalabihan",
+            "keluar": "kaluar",
+            "kemarin": "kamarin",
+            "kembali": "kambali",
+            "kembar": "kambar",
+            "kemudi": "kamudi",
+            "kena": "kana",
+            "kenal": "kanal",
+            "kenangan": "kanangan",
+            "kencing": "kancing",
+            "kendali": "kandali",
+            "kendaraan": "kandaraan",
+            "kentang": "kantang",
+            "kentut": "kantut",
+            "kepala": "kapala",
+            "kepiting": "kapiting",
+            "kerajaan": "karajaan",
+            "keramat": "karamat",
+            "keranjang": "karanjang",
+            "keras": "karas",
+            "kerbau": "karbau",
+            "keren": "karan",
+            "kereta": "karata",
+            "kering": "karing",
+            "keris": "karis",
+            "kerja": "karja",
+            "kertas": "kartas",
+            "kerudung": "karudung",
+            "kerupuk": "karupuk",
+            "kesal": "kasal",
+            "kesan": "kasan",
+            "ketat": "katat",
+            "ketawa": "katawa",
+            "ketika": "katika",
+            "ketupat": "katupat",
+            "khas": "khas",
+            "khawatir": "kawatir",
+            "kiamat": "kiamat",
+            "kilat": "kilat",
+            "kiri": "kiri",
+            "kirim": "kirim",
+            "kisah": "kisah",
+            "kitab": "kitab",
+            "knalpot": "knalpot",
+            "kobar": "kubar",
+            "kocok": "kucuk",
+            "kode": "kuda",
+            "kokoh": "kukuh",
+            "kolam": "kulam",
+            "kompor": "kumpor",
+            "kongsi": "kungsi",
+            "kopi": "kupi",
+            "koran": "kuran",
+            "korek": "kurak",
+            "kotor": "kutor",
+            "kuah": "kuah",
+            "kuat": "kuat",
+            "kubur": "kubur",
+            "kucing": "kucing",
+            "kuda": "kuda",
+            "kue": "kue",
+            "kuku": "kuku",
+            "kulit": "kulit",
+            "kuman": "kuman",
+            "kumbang": "kumbang",
+            "kumpul": "kumpul",
+            "kunci": "kunci",
+            "kuning": "kuning",
+            "kuno": "kuno",
+            "kupas": "kupas",
+            "kupu": "kupu",
+            "kura": "kura",
+            "kurang": "kurang",
+            "kursi": "kursi",
+            "kurus": "kurus",
+            "kutu": "kutu",
+            "labuh": "labuh",
+            "laci": "laci",
+            "lada": "lada",
+            "ladang": "ladang",
+            "lagi": "lagi",
+            "lagu": "lagu",
+            "lahir": "lahir",
+            "lain": "lain",
+            "laju": "laju",
+            "laki": "laki",
+            "laku": "laku",
+            "lalai": "lalai",
+            "lalat": "lalat",
+            "lalu": "lalu",
+            "lama": "lama",
+            "lambat": "lambat",
+            "lampu": "lampu",
+            "lancar": "lancar",
+            "landak": "landak",
+            "langganan": "langganan",
+            "langit": "langit",
+            "langka": "langka",
+            "langkah": "langkah",
+            "langsung": "langsung",
+            "lanjut": "lanjut",
+            "lansia": "lansia",
+            "lantai": "lantai",
+            "lapar": "lapar",
+            "lapis": "lapis",
+            "lapor": "lapor",
+            "lari": "lari",
+            "laris": "laris",
+            "larut": "larut",
+            "las": "las",
+            "laut": "laut",
+            "lawan": "lawan",
+            "layak": "layak",
+            "layan": "layan",
+            "layar": "layar",
+            "lebar": "labar",
+            "lebih": "labih",
+            "leher": "lahar",
+            "lelah": "lalah",
+            "lelang": "lalang",
+            "lelap": "lalap",
+            "leleh": "laleh",
+            "leluasa": "laluasa",
+            "lemas": "lamas",
+            "lemah": "lamah",
+            "lemak": "lamak",
+            "lemari": "lamari",
+            "lembab": "lambab",
+            "lembut": "lambut",
+            "lempeng": "lampeng",
+            "lena": "lena",
+            "lengah": "langah",
+            "lengan": "langan",
+            "lengkap": "langkap",
+            "lengket": "langkat",
+            "lenyap": "lanyap",
+            "lepas": "lapas",
+            "lepat": "lapat",
+            "lezat": "lazat",
+            "liar": "liar",
+            "lihat": "liat",
+            "liku": "liku",
+            "lilin": "lilin",
+            "lima": "lima",
+            "limpah": "limpah",
+            "linang": "linang",
+            "lincah": "lincah",
+            "lindu": "lindu",
+            "lingkar": "lingkar",
+            "lintah": "lintah",
+            "lintas": "lintas",
+            "lipat": "lipat",
+            "liput": "liput",
+            "lisan": "lisan",
+            "listrik": "listrik",
+            "liur": "liur",
+            "lobang": "lubang",
+            "logam": "lugam",
+            "logis": "lugis",
+            "lomba": "lumba",
+            "lompat": "lumpat",
+            "loncat": "luncat",
+            "longgar": "lunggar",
+            "lontar": "luntar",
+            "lorong": "lurung",
+            "luang": "luang",
+            "luar": "luar",
+            "luas": "luas",
+            "lucu": "lucu",
+            "ludah": "ludah",
+            "luka": "luka",
+            "lukis": "lukis",
+            "lulus": "lulus",
+            "lumat": "lumat",
+            "lumpuh": "lumpuh",
+            "lumpur": "lumpur",
+            "lunak": "lunak",
+            "lunas": "lunas",
+            "lupa": "lupa",
+            "lurus": "lurus",
+            "lusa": "lusa",
+            "lutut": "lutut",
+            "maaf": "maaf",
+            "mabuk": "mabuk",
+            "macam": "macam",
+            "madu": "madu",
+            "maghrib": "magrib",
+            "mahal": "mahal",
+            "mahir": "mahir",
+            "main": "main",
+            "majalah": "majalah",
+            "maju": "maju",
+            "maka": "maka",
+            "makam": "makam",
+            "makan": "makan",
+            "makhluk": "makhluk",
+            "makin": "makin",
+            "maklum": "maklum",
+            "makmur": "makmur",
+            "maksiat": "maksiat",
+            "maksud": "maksud",
+            "malaikat": "malaikat",
+            "malam": "malam",
+            "malas": "malas",
+            "maling": "maling",
+            "malu": "malu",
+            "mama": "mama",
+            "mampu": "mampu",
+            "mana": "mana",
+            "manis": "manis",
+            "mantap": "mantap",
+            "manusia": "manusia",
+            "marah": "marah",
+            "mari": "mari",
+            "markas": "markas",
+            "martabak": "martabak",
+            "masa": "masa",
+            "masak": "masak",
+            "masalah": "masalah",
+            "masih": "masih",
+            "masjid": "masjid",
+            "masuk": "masuk",
+            "mata": "mata",
+            "matahari": "matahari",
+            "mati": "mati",
+            "mau": "mau",
+            "mawar": "mawar",
+            "mayat": "mayat",
+            "mebel": "mabal",
+            "medan": "madan",
+            "media": "madia",
+            "megah": "magah",
+            "meja": "mija",
+            "mekar": "makar",
+            "melarat": "malarat",
+            "melati": "malati",
+            "melekat": "malakat",
+            "melotot": "malutut",
+            "memang": "mamang",
+            "membaca": "mambaca",
+            "membantu": "mambantu",
+            "membeli": "mambali",
+            "membuat": "mambuat",
+            "memilih": "mamilih",
+            "meminta": "maminta",
+            "memotong": "mamutung",
+            "menang": "manang",
+            "menangis": "manangis",
+            "menantu": "manantu",
+            "menara": "manara",
+            "mencari": "mancari",
+            "mendengar": "mandangar",
+            "mengajar": "mangajar",
+            "mengapa": "mangapa",
+            "menikah": "manikah",
+            "menit": "manit",
+            "menjadi": "manjadi",
+            "menonton": "manuntun",
+            "menteri": "manteri",
+            "mentimun": "mantimun",
+            "menu": "menu",
+            "merah": "marah",
+            "merdeka": "mardika",
+            "mereka": "marika",
+            "meriam": "mariam",
+            "mesin": "masin",
+            "meski": "maski",
+            "mesra": "masra",
+            "mesti": "masti",
+            "meter": "matar",
+            "mewah": "mawah",
+            "miliar": "miliar",
+            "minat": "minat",
+            "minggu": "minggu",
+            "minum": "minum",
+            "minyak": "minyak",
+            "miring": "miring",
+            "mirip": "mirip",
+            "misal": "misal",
+            "miskin": "miskin",
+            "mobil": "mobil",
+            "modal": "mudal",
+            "model": "mudel",
+            "mogok": "muguk",
+            "mohon": "muhun",
+            "molek": "mulak",
+            "monyet": "munyat",
+            "motor": "motor",
+            "muat": "muat",
+            "muda": "muda",
+            "mudah": "mudah",
+            "muka": "muka",
+            "mula": "mula",
+            "mulia": "mulia",
+            "mulut": "mulut",
+            "murah": "murah",
+            "murid": "murid",
+            "musang": "musang",
+            "musim": "musim",
+            "musuh": "musuh",
+            "nabi": "nabi",
+            "nada": "nada",
+            "nafas": "nafas",
+            "naga": "naga",
+            "naik": "naik",
+            "nakal": "nakal",
+            "nama": "nama",
+            "namun": "namun",
+            "nanti": "nanti",
+            "napas": "napas",
+            "narasi": "narasi",
+            "nasab": "nasab",
+            "nasi": "nasi",
+            "nasib": "nasib",
+            "nasihat": "nasihat",
+            "natal": "natal",
+            "negara": "nagara",
+            "nekat": "nakat",
+            "nenek": "ninik",
+            "netral": "natral",
+            "niat": "niat",
+            "nikah": "nikah",
+            "nikmat": "nikmat",
+            "nilai": "nilai",
+            "noda": "nuda",
+            "normal": "nurmal",
+            "novel": "nubal",
+            "nuklir": "nuklir",
+            "numpang": "numpang",
+            "nyala": "nyala",
+            "nyaman": "nyaman",
+            "nyamuk": "nyamuk",
+            "nyanyi": "nyanyi",
+            "nyata": "nyata",
+            "nyawa": "nyawa",
+            "obat": "ubat",
+            "obrol": "ubrul",
+            "ogah": "ugah",
+            "olah": "ulah",
+            "oleh": "ulah",
+            "omong": "umung",
+            "ompong": "umpung",
+            "orang": "urang",
+            "otak": "utak",
+            "otomatis": "utumatis",
+            "otot": "utut",
+            "pabrik": "pabrik",
+            "pacar": "pacar",
+            "pada": "pada",
+            "padam": "padam",
+            "pagar": "pagar",
+            "pagi": "pagi",
+            "paham": "paham",
+            "pahat": "pahat",
+            "pahit": "pahit",
+            "pajak": "pajak",
+            "pakai": "pakai",
+            "pakar": "pakar",
+            "paksa": "paksa",
+            "paku": "paku",
+            "pala": "pala",
+            "paling": "paling",
+            "palsu": "palsu",
+            "palu": "palu",
+            "paman": "paman",
+            "pamer": "pamar",
+            "panah": "panah",
+            "panas": "panas",
+            "pandai": "pandai",
+            "pandang": "pandang",
+            "panen": "panan",
+            "panggang": "panggang",
+            "panggil": "panggil",
+            "panggung": "panggung",
+            "panik": "panik",
+            "panjang": "panjang",
+            "pantai": "pantai",
+            "pantas": "pantas",
+            "pantat": "pantat",
+            "pantun": "pantun",
+            "papan": "papan",
+            "papua": "papua",
+            "para": "para",
+            "parah": "parah",
+            "parang": "parang",
+            "parfum": "parfum",
+            "paru": "paru",
+            "pasang": "pasang",
+            "pasar": "pasar",
+            "pasir": "pasir",
+            "paspor": "paspor",
+            "pasti": "pasti",
+            "pasukan": "pasukan",
+            "patah": "patah",
+            "patuh": "patuh",
+            "patung": "patung",
+            "paus": "paus",
+            "paut": "paut",
+            "pawang": "pawang",
+            "pecah": "pacah",
+            "pecat": "pacat",
+            "pedagang": "padagang",
+            "pedas": "padas",
+            "pedih": "padih",
+            "pegang": "pagang",
+            "pegawai": "pagawai",
+            "peka": "paka",
+            "pekan": "pakan",
+            "pekat": "pakat",
+            "pelan": "palan",
+            "pelangi": "palangi",
+            "pelayan": "palayan",
+            "pelepas": "palapas",
+            "pelihara": "paliara",
+            "pelit": "palit",
+            "peluk": "paluk",
+            "peluru": "paluru",
+            "pemain": "pamain",
+            "pembantu": "pambantu",
+            "pemuda": "pamuda",
+            "pena": "pana",
+            "penat": "panat",
+            "pencet": "pancat",
+            "pendek": "pandak",
+            "pendeta": "pandita",
+            "penuh": "panuh",
+            "penyakit": "panyakit",
+            "people": "papil",
+            "perabot": "parabut",
+            "perahu": "parahu",
+            "perang": "parang",
+            "peras": "paras",
+            "perawan": "parawan",
+            "perban": "parban",
+            "percaya": "parcaya",
+            "pergi": "pargi",
+            "perhiasan": "parhiasan",
+            "periksa": "pariksa",
+            "perintah": "parintah",
+            "perkasa": "parkasa",
+            "perlu": "parlu",
+            "permata": "parmata",
+            "permisi": "parmisi",
+            "pernikahan": "parnikahan",
+            "persis": "parsis",
+            "pertama": "partama",
+            "perut": "parut",
+            "pesan": "pasan",
+            "pesawat": "pasawat",
+            "pesisir": "pasisir",
+            "pesta": "pasta",
+            "peta": "pata",
+            "petani": "patani",
+            "peti": "pati",
+            "petir": "patir",
+            "piala": "piala",
+            "pijat": "pijat",
+            "pikir": "pikir",
+            "pilih": "pilih",
+            "pindah": "pindah",
+            "pinggang": "pinggang",
+            "pinggir": "pinggir",
+            "pingsan": "pingsan",
+            "pinjam": "pinjam",
+            "pintar": "pintar",
+            "pintu": "pintu",
+            "pipa": "pipa",
+            "pipi": "pipi",
+            "piring": "piring",
+            "pisah": "pisah",
+            "pisang": "pisang",
+            "pisau": "pisau",
+            "pohon": "puhun",
+            "pojok": "pujuk",
+            "pokok": "pukuk",
+            "polisi": "pulisi",
+            "pompa": "pumpa",
+            "pondok": "punduk",
+            "populer": "pupuler",
+            "pos": "pus",
+            "potong": "putung",
+            "praktis": "praktis",
+            "pria": "pria",
+            "pribadi": "pribadi",
+            "pukul": "pukul",
+            "pulang": "pulang",
+            "pulau": "pulau",
+            "pulih": "pulih",
+            "pulpen": "pulpan",
+            "punggung": "punggung",
+            "pusing": "pusing",
+            "putar": "putar",
+            "putih": "putih",
+            "putra": "putra",
+            "putri": "putri",
+            "putus": "putus",
+            "rabu": "raba",
+            "racun": "racun",
+            "radang": "radang",
+            "ragu": "ragu",
+            "rahang": "rahang",
+            "rahasia": "rahasiya",
+            "raja": "raja",
+            "rajin": "rajin",
+            "rakyat": "rakyat",
+            "ramah": "ramah",
+            "ramai": "ramai",
+            "rambut": "rambut",
+            "ramping": "ramping",
+            "rampok": "rampuk",
+            "rancang": "rancang",
+            "randah": "randah",
+            "rangka": "rangka",
+            "rangkul": "rangkul",
+            "rantai": "rantai",
+            "ranting": "ranting",
+            "rapat": "rapat",
+            "rapi": "rapi",
+            "rasa": "rasa",
+            "rasio": "rasio",
+            "rata": "rata",
+            "ratu": "ratu",
+            "rawa": "rawa",
+            "rawat": "rawat",
+            "raya": "raya",
+            "rayu": "rayu",
+            "rebus": "rabus",
+            "rebut": "rabut",
+            "reda": "rada",
+            "rejeki": "rajaki",
+            "rekam": "rakam",
+            "rekan": "rakan",
+            "rela": "rala",
+            "remaja": "ramaja",
+            "remuk": "ramuk",
+            "renang": "ranang",
+            "rencana": "rancana",
+            "rendah": "randah",
+            "renung": "ranung",
+            "resep": "rasap",
+            "restu": "rastu",
+            "retak": "ratak",
+            "ria": "ria",
+            "ribu": "ribu",
+            "ribut": "ribut",
+            "ringan": "ringan",
+            "ringkas": "ringkas",
+            "rintang": "rintang",
+            "rintis": "rintis",
+            "risau": "risau",
+            "risiko": "risiko",
+            "robek": "rubak",
+            "roboh": "rubuh",
+            "roda": "ruda",
+            "rokok": "rukuk",
+            "roman": "ruman",
+            "rotan": "rutan",
+            "roti": "ruti",
+            "ruang": "ruang",
+            "rugi": "rugi",
+            "rujak": "rujak",
+            "rukun": "rukun",
+            "rumah": "rumah",
+            "rumbai": "rumbai",
+            "rumput": "rumput",
+            "runcing": "runcing",
+            "runding": "runding",
+            "runtuh": "runtuh",
+            "rupa": "rupa",
+            "rusa": "rusa",
+            "rusak": "rusak",
+            "rusuh": "rusuh",
+            "sabah": "sabah",
+            "sabar": "sabar",
+            "sabtu": "sabtu",
+            "sabun": "sabun",
+            "sabung": "sabung",
+            "sabut": "sabut",
+            "sadar": "sadar",
+            "sadap": "sadap",
+            "sadis": "sadis",
+            "sagu": "sagu",
+            "sah": "sah",
+            "sahabat": "sahabat",
+            "saham": "saham",
+            "sahur": "sahur",
+            "saja": "saja",
+            "sajak": "sajak",
+            "sakit": "sakit",
+            "saksi": "saksi",
+            "saku": "saku",
+            "salah": "salah",
+            "salam": "salam",
+            "salju": "salju",
+            "salon": "salun",
+            "sama": "sama",
+            "sambal": "sambal",
+            "sambung": "sambung",
+            "sampah": "sampah",
+            "sampai": "sampai",
+            "sampan": "sampan",
+            "samping": "samping",
+            "sampo": "sampu",
+            "sana": "sana",
+            "sandal": "sandal",
+            "sangat": "sangat",
+            "sanggup": "sanggup",
+            "sangkar": "sangkar",
+            "sapi": "sapi",
+            "sapu": "sapu",
+            "sara": "sara",
+            "saraf": "saraf",
+            "sarang": "sarang",
+            "sarapan": "sarapan",
+            "sari": "sari",
+            "saring": "saring",
+            "sarung": "sarung",
+            "sate": "sate",
+            "satu": "satu",
+            "sawah": "sawah",
+            "saya": "ulun",
+            "sayang": "sayang",
+            "sayap": "sayap",
+            "sayur": "sayur",
+            "sebab": "sabab",
+            "sebar": "sabar",
+            "sebelah": "sabilah",
+            "sebelum": "sabilum",
+            "sebentar": "sabantar",
+            "sedang": "sadang",
+            "sedap": "sadap",
+            "sedia": "sadia",
+            "sedih": "sadih",
+            "sedikit": "sadikit",
+            "segala": "sagala",
+            "segar": "sagar",
+            "segera": "sagara",
+            "sehat": "sahat",
+            "sejarah": "sajarah",
+            "sejuk": "sajuk",
+            "sekarang": "sakarang",
+            "sekolah": "sakulah",
+            "selalu": "salu",
+            "selamat": "salamat",
+            "selasa": "salasa",
+            "selatan": "salatan",
+            "seleksi": "salaksi",
+            "selesai": "salasai",
+            "selimut": "salimut",
+            "seling": "saling",
+            "selir": "salir",
+            "selisih": "salisih",
+            "seluruh": "saluruh",
+            "semacam": "samacam",
+            "semangat": "samangat",
+            "sembah": "sambah",
+            "sembilan": "sambilan",
+            "sembuh": "sambuh",
+            "sembunyi": "sambunyi",
+            "semen": "saman",
+            "semesta": "samasta",
+            "sempit": "sampit",
+            "semua": "samua",
+            "semut": "samut",
+            "senam": "sanam",
+            "senang": "sanang",
+            "senapan": "sanapan",
+            "seni": "sani",
+            "senin": "sanin",
+            "senja": "sanja",
+            "senjata": "sanjata",
+            "sentuh": "santuh",
+            "senyum": "sanyum",
+            "sepak": "sapak",
+            "sepatu": "sapatu",
+            "sepeda": "sapada",
+            "sepi": "sapi",
+            "sepuh": "sapuh",
+            "seragam": "saragam",
+            "serang": "sarang",
+            "seratus": "saratus",
+            "serba": "sarba",
+            "serbet": "sarbat",
+            "serbu": "sarbu",
+            "serdadu": "sardadu",
+            "sering": "saring",
+            "serius": "sarius",
+            "serta": "sarta",
+            "seru": "saru",
+            "seruling": "saruling",
+            "sesak": "sasak",
+            "sesat": "sasat",
+            "sesuai": "sasuai",
+            "setan": "satan",
+            "setelah": "satalah",
+            "setengah": "satangah",
+            "setia": "satia",
+            "setrika": "satrika",
+            "sewa": "sawa",
+            "siang": "siang",
+            "siap": "siap",
+            "siasat": "siasat",
+            "sibuk": "sibuk",
+            "sidang": "sidang",
+            "sifat": "sifat",
+            "sihir": "sihir",
+            "sikap": "sikap",
+            "sikat": "sikat",
+            "siksa": "siksa",
+            "siku": "siku",
+            "silat": "silat",
+            "silau": "silau",
+            "simpan": "simpan",
+            "sinar": "sinar",
+            "singa": "singa",
+            "singkat": "singkat",
+            "sini": "sini",
+            "siput": "siput",
+            "sirih": "sirih",
+            "sisa": "sisa",
+            "siswa": "siswa",
+            "situ": "situ",
+            "siul": "siul",
+            "soal": "sual",
+            "sobat": "subat",
+            "soda": "suda",
+            "sopan": "supan",
+            "sopir": "supir",
+            "sore": "sura",
+            "sosial": "susial",
+            "sosok": "susuk",
+            "soto": "sutu",
+            "suami": "suami",
+            "suap": "suap",
+            "suara": "suara",
+            "suasana": "suasana",
+            "subuh": "subuh",
+            "suci": "suci",
+            "sudah": "sudah",
+            "sudut": "sudut",
+            "sugesti": "sugasti",
+            "suhu": "suhu",
+            "suka": "suka",
+            "suku": "suku",
+            "sulam": "sulam",
+            "suling": "suling",
+            "sultan": "sultan",
+            "sulung": "sulung",
+            "sulit": "sulit",
+            "sumbang": "sumbang",
+            "sumber": "sumbar",
+            "sumpah": "sumpah",
+            "sunat": "sunat",
+            "sungai": "sungai",
+            "sungguh": "sungguh",
+            "suntik": "suntik",
+            "sunyi": "sunyi",
+            "supaya": "supaya",
+            "supir": "supir",
+            "surat": "surat",
+            "surga": "surga",
+            "suruh": "suruh",
+            "surut": "surut",
+            "susah": "susah",
+            "susu": "susu",
+            "susun": "susun",
+            "susur": "susur",
+            "syukur": "sukur",
+            "tabah": "tabah",
+            "tabib": "tabib",
+            "tabrak": "tabrak",
+            "tadah": "tadah",
+            "tadi": "tadi",
+            "tahan": "tahan",
+            "tahu": "tahu",
+            "tahun": "tahun",
+            "tajam": "tajam",
+            "takdir": "takdir",
+            "takut": "takut",
+            "tali": "tali",
+            "taman": "taman",
+            "tambah": "tambah",
+            "tampak": "tampak",
+            "tampan": "tampan",
+            "tamu": "tamu",
+            "tanah": "tanah",
+            "tanam": "tanam",
+            "tanda": "tanda",
+            "tanding": "tanding",
+            "tangan": "tangan",
+            "tangga": "tangga",
+            "tanggal": "tanggal",
+            "tangis": "tangis",
+            "tangkai": "tangkai",
+            "tangkap": "tangkap",
+            "tani": "tani",
+            "tanpa": "tanpa",
+            "tanya": "tanya",
+            "tapa": "tapa",
+            "tapi": "tapi",
+            "tari": "tari",
+            "tarik": "tarik",
+            "taruh": "taruh",
+            "tas": "tas",
+            "tatap": "tatap",
+            "tata": "tata",
+            "tauge": "taugi",
+            "tawa": "tawa",
+            "tawan": "tawan",
+            "tawar": "tawar",
+            "tebak": "tabak",
+            "tebal": "tabal",
+            "tebang": "tabang",
+            "tebas": "tabas",
+            "tebing": "tabing",
+            "tebu": "tabu",
+            "tegak": "tagak",
+            "teguh": "taguh",
+            "teguk": "taguk",
+            "tekan": "takan",
+            "teko": "taku",
+            "teks": "taks",
+            "telan": "talan",
+            "telat": "talat",
+            "telepon": "talipun",
+            "teliti": "taliti",
+            "telur": "talur",
+            "teman": "taman",
+            "tembak": "tambak",
+            "tembok": "tambuk",
+            "tempat": "tampat",
+            "tempel": "tampal",
+            "tempe": "tampi",
+            "tenang": "tanang",
+            "tenda": "tanda",
+            "tengah": "tangah",
+            "tenggelam": "tanggalam",
+            "tenggorokan": "tanggurukan",
+            "tengok": "tangguk",
+            "tenis": "tanis",
+            "tentang": "tantang",
+            "tentara": "tantara",
+            "tentu": "tantu",
+            "tepat": "tapat",
+            "tepi": "tapi",
+            "tepuk": "tapuk",
+            "tepung": "tapung",
+            "terang": "tarang",
+            "teras": "taras",
+            "terbang": "tarbang",
+            "terima": "tarima",
+            "terong": "tarung",
+            "terus": "tarus",
+            "tetangga": "tatangga",
+            "tetap": "tatap",
+            "tetes": "tatas",
+            "tiang": "tiang",
+            "tiba": "tiba",
+            "tidak": "tidak",
+            "tidur": "tidur",
+            "tiga": "tiga",
+            "tikus": "tikus",
+            "timah": "timah",
+            "timbang": "timbang",
+            "timur": "timur",
+            "tindak": "tindak",
+            "tinggal": "tinggal",
+            "tinggi": "tinggi",
+            "tinju": "tinju",
+            "tipis": "tipis",
+            "tipu": "tipu",
+            "tirai": "tirai",
+            "tiru": "tiru",
+            "tisu": "tisu",
+            "titik": "titik",
+            "tiup": "tiup",
+            "toko": "tuku",
+            "tolak": "tulak",
+            "tolong": "tulung",
+            "tombol": "tumbul",
+            "tomat": "tumat",
+            "tong": "tung",
+            "tongkat": "tungkat",
+            "topi": "tupi",
+            "total": "total",
+            "tradisi": "tradisi",
+            "tua": "tua",
+            "tuang": "tuang",
+            "tubuh": "tubuh",
+            "tuding": "tuding",
+            "tuhan": "tuhan",
+            "tuju": "tuju",
+            "tujuh": "tujuh",
+            "tukang": "tukang",
+            "tukar": "tukar",
+            "tulang": "tulang",
+            "tulis": "tulis",
+            "tulus": "tulus",
+            "tumbuh": "tumbuh",
+            "tumit": "tumit",
+            "tumpah": "tumpah",
+            "tumpul": "tumpul",
+            "tuna": "tuna",
+            "tunda": "tunda",
+            "tunggu": "tunggu",
+            "tunggal": "tunggal",
+            "turun": "turun",
+            "tusuk": "tusuk",
+            "tutup": "tutup",
+            "uang": "wang",
+            "ubah": "ubah",
+            "uban": "uban",
+            "ubi": "ubi",
+            "ubin": "ubin",
+            "ucap": "ucap",
+            "udang": "udang",
+            "udara": "udara",
+            "ujar": "ujar",
+            "uji": "uji",
+            "ujung": "ujung",
+            "ukir": "ukir",
+            "ukur": "ukur",
+            "ulah": "ulah",
+            "ulang": "ulang",
+            "ular": "ular",
+            "ulat": "ulat",
+            "ulur": "ulur",
+            "umur": "umur",
+            "undang": "undang",
+            "unggas": "unggas",
+            "unggun": "unggun",
+            "ungkap": "ungkap",
+            "ungkit": "ungkit",
+            "untai": "untai",
+            "untuk": "untuk",
+            "untung": "untung",
+            "upah": "upah",
+            "upaya": "upaya",
+            "urai": "urai",
+            "urang": "urang",
+            "urat": "urat",
+            "urung": "urung",
+            "urus": "urus",
+            "usaha": "usaha",
+            "usai": "usai",
+            "usia": "usia",
+            "usir": "usir",
+            "usul": "usul",
+            "utama": "utama",
+            "utang": "utang",
+            "utara": "utara",
+            "vaksin": "vaksin",
+            "variasi": "variasi",
+            "vas": "vas",
+            "versi": "versi",
+            "video": "video",
+            "virus": "virus",
+            "visa": "visa",
+            "visi": "visi",
+            "vokal": "vokal",
+            "volume": "volume",
+            "wabah": "wabah",
+            "wadah": "wadah",
+            "wafat": "wafat",
+            "wajah": "wajah",
+            "wajar": "wajar",
+            "wajib": "wajib",
+            "wakil": "wakil",
+            "waktu": "waktu",
+            "walau": "walau",
+            "wanita": "bini",
+            "warga": "warga",
+            "warna": "warna",
+            "warta": "warta",
+            "warung": "warung",
+            "wasiat": "wasiat",
+            "wasit": "wasit",
+            "waspada": "waspada",
+            "wawancara": "wawancara",
+            "wayang": "wayang",
+            "weda": "wada",
+            "wijaya": "wijaya",
+            "wilayah": "wilayah",
+            "wiraswasta": "wiraswasta",
+            "wisata": "wisata",
+            "wuduk": "wuduk",
+            "yakin": "yakin",
+            "yatim": "yatim",
+            "yayasan": "yayasan",
+            "yoga": "yoga",
+            "yudisium": "yudisium",
+            "yuyu": "yuyu",
+            "zaman": "zaman",
+            "zamrud": "zamrud",
+            "zebra": "zebra",
+            "ziarah": "ziarah",
+            "zina": "zina",
+            "zodiak": "zudiak",
+            "zona": "zuna",
+            "zuhur": "zuhur",
+            "bagaimana": "kaya apa",
+            "pergi": "pargi",
+            "kampus": "kampus",
+            "ingin": "handak",
+            "ke": "ka",
+            "rumah": "rumah"
+        };
+
+        // Buat kamus Banjar ke Indonesia
+        const banjarToId = {};
+        for (const [indonesia, banjar] of Object.entries(idToBanjar)) {
+            banjarToId[banjar] = indonesia;
+        }
+
+        // Fungsi untuk menerjemahkan Indonesia ke Banjar
+        function translateIdToBanjar() {
+            const inputText = document.getElementById('input-id').value.toLowerCase().trim();
+            if (!inputText) {
+                document.getElementById('result-banjar').innerHTML = 'Masukkan teks terlebih dahulu...';
+                document.getElementById('stats-id').textContent = '';
+                return;
+            }
+
+            showLoading();
+            
+            setTimeout(() => {
+                const words = inputText.split(/\s+/);
+                let translatedWords = [];
+                let unknownWords = [];
+                let translatedCount = 0;
+
+                words.forEach(word => {
+                    const cleanWord = word.replace(/[.,!?;:]$/, '');
+                    const translation = idToBanjar[cleanWord];
+                    
+                    if (translation) {
+                        translatedWords.push(translation);
+                        translatedCount++;
+                    } else {
+                        translatedWords.push(`<span class="unknown-word">${cleanWord}</span>`);
+                        unknownWords.push(cleanWord);
+                    }
+                });
+
+                const result = translatedWords.join(' ');
+                document.getElementById('result-banjar').innerHTML = result;
+                
+                // Tampilkan statistik
+                const statsText = `Diterjemahkan: ${translatedCount}/${words.length} kata`;
+                if (unknownWords.length > 0) {
+                    document.getElementById('stats-id').innerHTML = 
+                        `${statsText} | Kata tidak dikenal: ${unknownWords.join(', ')}`;
+                } else {
+                    document.getElementById('stats-id').textContent = statsText;
+                }
+                
+                hideLoading();
+            }, 500);
+        }
+
+        // Fungsi untuk menerjemahkan Banjar ke Indonesia
+        function translateBanjarToId() {
+            const inputText = document.getElementById('input-banjar').value.toLowerCase().trim();
+            if (!inputText) {
+                document.getElementById('result-id').innerHTML = 'Masukkan teks terlebih dahulu...';
+                document.getElementById('stats-banjar').textContent = '';
+                return;
+            }
+
+            showLoading();
+            
+            setTimeout(() => {
+                const words = inputText.split(/\s+/);
+                let translatedWords = [];
+                let unknownWords = [];
+                let translatedCount = 0;
+
+                words.forEach(word => {
+                    const cleanWord = word.replace(/[.,!?;:]$/, '');
+                    const translation = banjarToId[cleanWord];
+                    
+                    if (translation) {
+                        translatedWords.push(translation);
+                        translatedCount++;
+                    } else {
+                        translatedWords.push(`<span class="unknown-word">${cleanWord}</span>`);
+                        unknownWords.push(cleanWord);
+                    }
+                });
+
+                const result = translatedWords.join(' ');
+                document.getElementById('result-id').innerHTML = result;
+                
+                // Tampilkan statistik
+                const statsText = `Diterjemahkan: ${translatedCount}/${words.length} kata`;
+                if (unknownWords.length > 0) {
+                    document.getElementById('stats-banjar').innerHTML = 
+                        `${statsText} | Kata tidak dikenal: ${unknownWords.join(', ')}`;
+                } else {
+                    document.getElementById('stats-banjar').textContent = statsText;
+                }
+                
+                hideLoading();
+            }, 500);
+        }
+
+        // Fungsi untuk menukar bahasa
+        function swapLanguages() {
+            const idText = document.getElementById('input-id').value;
+            const banjarText = document.getElementById('input-banjar').value;
+            
+            document.getElementById('input-id').value = banjarText;
+            document.getElementById('input-banjar').value = idText;
+            
+            // Jika ada teks, terjemahkan otomatis
+            if (idText) translateIdToBanjar();
+            if (banjarText) translateBanjarToId();
+        }
+
+        // Fungsi untuk mengatur arah terjemahan
+        function setDirection(direction) {
+            const buttons = document.querySelectorAll('.lang-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        // Fungsi loading
+        function showLoading() {
+            document.getElementById('loading').style.display = 'block';
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        // Event listener untuk Enter key
+        document.getElementById('input-id').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                translateIdToBanjar();
+            }
+        });
+
+        document.getElementById('input-banjar').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                translateBanjarToId();
+            }
+        });
+
+        // Tampilkan jumlah kata saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', function() {
+            const totalWords = Object.keys(idToBanjar).length;
+            document.querySelector('.header p').innerHTML += 
+                ` <strong>(${totalWords}+ kata dalam database)</strong>`;
+        });
+    </script>
+</body>
+</html>

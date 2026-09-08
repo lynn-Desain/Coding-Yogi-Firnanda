@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Kamus Bahasa Indonesia - Inggris & Inggris - Indonesia</title>
+<style>
+  /* Reset dan styling dasar */
+  * {
+    box-sizing: border-box;
+}
+    body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f0f4f8;
+    margin: 0; padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+    .container {
+    background: white;
+    max-width: 600px;
+    width: 90%;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+    h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 1.5rem;
+}
+    .mode-select {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+    label {
+    font-weight: 600;
+    color: #555;
+    cursor: pointer;
+}
+    input[type="radio"] {
+    margin-right: 0.3rem;
+    cursor: pointer;
+}
+    .input-group {
+    margin-bottom: 1rem;
+}
+    textarea {
+    width: 100%;
+    padding: 0.6rem;
+    font-size: 1rem;
+    border: 1.5px solid #ccc;
+    border-radius: 6px;
+    resize: vertical;
+    transition: border-color 0.3s ease;
+    min-height: 80px;
+}
+    textarea:focus {
+    border-color: #4a90e2;
+    outline: none;
+}
+    button {
+    background-color: #4a90e2;
+    border: none;
+    color: white;
+    padding: 0.7rem 1.4rem;
+    font-size: 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: block;
+    margin: 0 auto;
+}
+    button:hover {
+    background-color: #357ABD;
+}
+    .result {
+    margin-top: 1.5rem;
+    background-color: #e9f0ff;
+    border-radius: 8px;
+    padding: 1rem;
+    font-size: 1.1rem;
+    color: #222;
+    min-height: 60px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+    @media (max-width: 480px) {
+    .mode-select {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+</style>
+</head>
+<body>
+    <div class="container">
+    <h1>Kamus Bahasa Indonesia - Inggris & Inggris - Indonesia</h1>
+
+    <div class="mode-select">
+        <label><input type="radio" name="mode" value="idToEn" checked /> Indonesia → Inggris</label>
+        <label><input type="radio" name="mode" value="enToId" /> Inggris → Indonesia</label>
+    </div>
+
+    <div class="input-group">
+        <label for="inputText" id="inputLabel">Masukkan kalimat Bahasa Indonesia:</label>
+        <textarea id="inputText" placeholder="Contoh: Saya makan nasi"></textarea>
+    </div>
+
+    <button id="translateBtn">Terjemahkan</button>
+
+    <div class="result" id="resultArea"></div>
+    </div>
+
+<script>
+  // Kamus Indonesia ke Inggris
+    const idToEn = {
+    "saya": "I",
+    "kamu": "you",
+    "dia": "he/she",
+    "kami": "we",
+    "mereka": "they",
+    "makan": "eat",
+    "minum": "drink",
+    "tidur": "sleep",
+    "berlari": "run",
+    "berjalan": "walk",
+    "melihat": "see",
+    "mendengar": "hear",
+    "berbicara": "speak",
+    "menulis": "write",
+    "membaca": "read",
+    "rumah": "house",
+    "sekolah": "school",
+    "kantor": "office",
+    "mobil": "car",
+    "sepeda": "bicycle",
+    "jalan": "road",
+    "air": "water",
+    "makanan": "food",
+    "minuman": "drink",
+    "teman": "friend",
+    "keluarga": "family",
+    "besar": "big",
+    "kecil": "small",
+    "panjang": "long",
+    "pendek": "short",
+    "cepat": "fast",
+    "lambat": "slow",
+    "bagus": "good",
+    "buruk": "bad",
+    "panas": "hot",
+    "dingin": "cold",
+    "indah": "beautiful",
+    "jelek": "ugly",
+    "mudah": "easy",
+    "sulit": "difficult",
+    "baru": "new",
+    "lama": "old",
+    "tinggi": "tall",
+    "rendah": "low",
+    "kaya": "rich",
+    "miskin": "poor",
+    "senang": "happy",
+    "sedih": "sad",
+    "marah": "angry",
+    "tenang": "calm",
+    "buku": "book",
+    "pensil": "pencil",
+    "meja": "table",
+    "kursi": "chair",
+    "jendela": "window",
+    "pintu": "door",
+    "langit": "sky",
+    "matahari": "sun",
+    "bulan": "moon",
+    "bintang": "star",
+    "hujan": "rain",
+    "salju": "snow",
+    "angin": "wind",
+    "api": "fire",
+    "tanah": "earth",
+    "gunung": "mountain",
+    "laut": "sea",
+    "sungai": "river",
+    "hutan": "forest",
+    "kota": "city",
+    "desa": "village",
+    "pasar": "market",
+    "toko": "shop",
+    "rumah sakit": "hospital",
+    "polisi": "police",
+    "guru": "teacher",
+    "dokter": "doctor",
+    "perawat": "nurse",
+    "pelajar": "student",
+    "mahasiswa": "college student",
+    "anak": "child",
+    "ibu": "mother",
+    "ayah": "father",
+    "adik": "younger sibling",
+    "kakak": "older sibling",
+    "saudara": "relative",
+    "cinta": "love",
+    "damai": "peace",
+    "perang": "war",
+    "kerja": "work",
+    "belajar": "study",
+    "bermain": "play",
+    "beristirahat": "rest",
+    "berpikir": "think",
+    "berdoa": "pray",
+    "bernyanyi": "sing",
+    "menari": "dance",
+    "berfoto": "take photo",
+    "berbicara": "talk",
+    "mendengarkan": "listen",
+    "melukis": "paint",
+    "memasak": "cook",
+    "membersihkan": "clean",
+    "membeli": "buy",
+    "menjual": "sell",
+    "membawa": "carry",
+    "membuka": "open",
+    "menutup": "close",
+    "menggambar": "draw",
+    "melompat": "jump",
+    "berenang": "swim",
+    "terbang": "fly",
+    "jatuh": "fall",
+    "bangun": "wake up",
+    "mencuci": "wash",
+    "memakai": "wear",
+    "mencium": "smell",
+    "merasakan": "feel",
+    "mengerti": "understand",
+    "mengetahui": "know",
+    "mengingat": "remember",
+    "melupakan": "forget",
+    "membantu": "help",
+    "menolong": "assist",
+    "menunggu": "wait",
+    "bertemu": "meet",
+    "pergi": "go",
+    "datang": "come",
+    "masuk": "enter",
+    "keluar": "exit",
+    "naik": "go up",
+    "turun": "go down",
+    "berhenti": "stop",
+    "mulai": "start",
+    "selesai": "finish"
+  };
+
+  // Buat kamus Inggris ke Indonesia dengan membalik idToEn
+  const enToId = {};
+  for (const [id, en] of Object.entries(idToEn)) {
+    enToId[en.toLowerCase()] = id;
+  }
+
+  // Fungsi ubah string ke lowercase
+  function toLower(str) {
+    return str.toLowerCase();
+  }
+
+  // Fungsi terjemahkan kalimat per kata
+  function terjemahkanKalimat(kalimat, kamus) {
+    // Pisah kata dengan regex agar tanda baca tidak ikut
+    const kataArray = kalimat.match(/\b[\w']+\b/g) || [];
+    let hasilArray = [];
+
+    for (let kata of kataArray) {
+      let kataLower = toLower(kata);
+      if (kamus.hasOwnProperty(kataLower)) {
+        hasilArray.push(kamus[kataLower]);
+      } else {
+        hasilArray.push(kata);
+      }
+    }
+    return hasilArray.join(' ');
+  }
+
+  // Elemen UI
+  const modeRadios = document.querySelectorAll('input[name="mode"]');
+  const inputText = document.getElementById('inputText');
+  const inputLabel = document.getElementById('inputLabel');
+  const translateBtn = document.getElementById('translateBtn');
+  const resultArea = document.getElementById('resultArea');
+
+  // Update label placeholder sesuai mode
+  function updateMode() {
+    const mode = document.querySelector('input[name="mode"]:checked').value;
+    if (mode === 'idToEn') {
+      inputLabel.textContent = 'Masukkan kalimat Bahasa Indonesia:';
+      inputText.placeholder = 'Contoh: Saya makan nasi';
+    } else {
+      inputLabel.textContent = 'Masukkan kalimat Bahasa Inggris:';
+      inputText.placeholder = 'Example: I eat rice';
+    }
+    resultArea.textContent = '';
+    inputText.value = '';
+    inputText.focus();
+  }
+
+  modeRadios.forEach(radio => {
+    radio.addEventListener('change', updateMode);
+  });
+
+  translateBtn.addEventListener('click', () => {
+    const mode = document.querySelector('input[name="mode"]:checked').value;
+    const kalimat = inputText.value.trim();
+    if (!kalimat) {
+      resultArea.textContent = 'Silakan masukkan kalimat terlebih dahulu.';
+      return;
+    }
+    let hasil;
+    if (mode === 'idToEn') {
+      hasil = terjemahkanKalimat(kalimat, idToEn);
+    } else {
+      hasil = terjemahkanKalimat(kalimat, enToId);
+    }
+    resultArea.textContent = `Terjemahan: ${hasil}`;
+  });
+
+  // Inisialisasi tampilan
+  updateMode();
+</script>
+</body>
+</html>
